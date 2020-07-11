@@ -1,0 +1,25 @@
+{
+  "name": "users-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/config/server.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MTRecouso/node-users-api.git"
+  },
+  "author": "Mateus Recouso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MTRecouso/node-users-api/issues"
+  },
+  "homepage": "https://github.com/MTRecouso/node-users-api#readme",
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "jest": "^26.1.0"
+  }
+}
