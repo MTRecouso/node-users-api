@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
+const jwt = require('jsonwebtoken');
 
 const { hashPassword } = require('../services/passwordService');
 
@@ -8,9 +9,7 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   guid: {
     type: String,
-    required: true,
     immutable: true,
-    default: uuid.v4(),
   },
   name: {
     type: String,
@@ -24,7 +23,6 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
-    select: false,
   },
   phones: {
     type: [{ number: String, areaCode: String }],
@@ -38,16 +36,20 @@ const UserSchema = new Schema({
   token: {
     type: String,
     required: true,
+    default: jwt.sign({ id: this.guid }, process.env.JWT_SECRET),
   },
-}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+}, { timestamps: true });
 
 UserSchema.pre('save', async function updatePasswordIfNeeded(next) {
   const user = this;
+  if (user.isNew === true) {
+    user.guid = uuid.v4();
+    user.token = jwt.sign({ id: user.guid }, process.env.JWT_SECRET);
+  }
   if (user.isModified('password')) {
     user.password = await hashPassword(user.password);
-  } else {
-    next();
   }
+  next();
 });
 
 module.exports = mongoose.model('User', UserSchema);

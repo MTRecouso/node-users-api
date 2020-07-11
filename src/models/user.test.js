@@ -1,16 +1,26 @@
 const mongoose = require('mongoose');
 const UserModel = require('./user.js');
 
-const createdUser = {
+const userData = {
   name: 'Teste',
   email: 'teste@teste.com',
   phones: [{ number: '123456789', areaCode: '11' }],
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
 };
 
-const userData = { password: 'teste234', ...createdUser };
+const createdUser = {
+  ...userData,
+  token: expect.any(String),
+  createdAt: expect.any(Date),
+  updatedAt: expect.any(Date),
+  lastLogin: expect.any(Date),
+  guid: expect.any(String),
+};
 
 describe('User Model Tests', () => {
+  let userToken;
+  let userGuid;
+  let originalHashedPassword;
+
   beforeAll(async () => {
     await mongoose.connect(
       process.env.MONGO_URL,
@@ -24,22 +34,35 @@ describe('User Model Tests', () => {
   });
 
   it('should create & save user successfully', async () => {
-    const user = new UserModel(userData);
+    const user = new UserModel({ password: 'teste234', ...userData });
     const savedUser = await user.save();
+    userGuid = savedUser.guid;
+    userToken = savedUser.token;
+    originalHashedPassword = savedUser.password;
     expect(savedUser.toJSON()).toMatchObject(createdUser);
-    expect(savedUser._id).toBeDefined();
-    expect(savedUser.guid).toBeDefined();
-    expect(savedUser.password).toBeDefined();
   });
 
   it('should fail on user creation because email already exists', async () => {
     try {
-      const user = new UserModel(userData);
+      const user = new UserModel({ password: 'teste234', ...userData });
       await user.save();
     } catch (err) {
       const dupKeyErrorMatcher = /E11000 duplicate key error/;
       expect(err.message).toMatch(dupKeyErrorMatcher);
     }
+  });
+
+  it('should update user email and password without interfering on token and guid', async () => {
+    const newEmail = 'teste2@teste.com';
+    const newPassword = 'teste345';
+    const user = await UserModel.findOne({ guid: userGuid });
+    user.email = newEmail;
+    user.password = newPassword;
+    const updatedUser = await user.save();
+    expect(updatedUser.email).toBe(newEmail);
+    expect(updatedUser.password).not.toBe(originalHashedPassword);
+    expect(updatedUser.guid).toBe(userGuid);
+    expect(updatedUser.token).toBe(userToken);
   });
 });
 
