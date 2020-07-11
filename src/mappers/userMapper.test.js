@@ -18,6 +18,11 @@ const httpResponseUser = {
   nome: 'Teste',
   email: 'teste@teste.com',
   telefones: [{ numero: '123456789', ddd: '11' }],
+  id: expect.any(String),
+  data_criacao: expect.any(Date),
+  data_atualizacao: expect.any(Date),
+  ultimo_login: expect.any(Date),
+  token: expect.any(String),
 };
 
 describe('User mapper tests', () => {
@@ -28,6 +33,6 @@ describe('User mapper tests', () => {
 
   it('Map model user to http user', () => {
     const mappedUser = UserMapper.modelToHttp(modelUser);
-    expect(mappedUser).toMatchObject(httpResponseUser);
+    expect(mappedUser).toEqual(httpResponseUser);
   });
 });
