@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const UserModel = require('./user.js');
+const { FieldAlreadyExistsError } = require('../errors/errors');
 
 const userData = {
   name: 'Teste',
@@ -47,8 +48,7 @@ describe('User Model Tests', () => {
       const user = new UserModel({ password: 'teste234', ...userData });
       await user.save();
     } catch (err) {
-      const dupKeyErrorMatcher = /E11000 duplicate key error/;
-      expect(err.message).toMatch(dupKeyErrorMatcher);
+      expect(err instanceof FieldAlreadyExistsError).toBe(true);
     }
   });
 

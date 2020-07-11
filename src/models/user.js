@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
+const { FieldAlreadyExistsError } = require('../errors/errors');
 
 const { hashPassword } = require('../services/passwordService');
 
@@ -50,6 +51,14 @@ UserSchema.pre('save', async function updatePasswordIfNeeded(next) {
     user.password = await hashPassword(user.password);
   }
   next();
+});
+
+UserSchema.post('save', (error, doc, next) => {
+  let saveError = error;
+  if (error.name === 'MongoError' && error.code === 11000) {
+    saveError = new FieldAlreadyExistsError({ field: 'email', messageNameForField: 'E-mail' });
+  }
+  next(saveError);
 });
 
 module.exports = mongoose.model('User', UserSchema);
