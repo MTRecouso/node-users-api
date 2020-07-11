@@ -17,9 +17,13 @@
   },
   "homepage": "https://github.com/MTRecouso/node-users-api#readme",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.1",
     "eslint": "^7.4.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
     "jest": "^26.1.0"
+  },
+  "dependencies": {
+    "mongoose": "^5.9.23"
   }
 }
