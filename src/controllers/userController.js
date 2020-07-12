@@ -27,10 +27,9 @@ exports.signIn = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
   try {
-    const authorizationHeader = req.get('Authorization');
-    console.log(authorizationHeader);
+    const token = req.get('Authorization');
     const { id } = req.params;
-    const userModel = await GetUser.exec({ id, authorizationHeader });
+    const userModel = await GetUser.exec({ id, token });
     const getUserResponse = UserMapper.modelToHttp(userModel);
     res.json(getUserResponse);
   } catch (err) {
