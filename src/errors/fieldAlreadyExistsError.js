@@ -5,4 +5,4 @@ class FieldAlreadyExistsError extends Error {
   }
 }
 
-module.exports = { FieldAlreadyExistsError };
+module.exports = FieldAlreadyExistsError;
