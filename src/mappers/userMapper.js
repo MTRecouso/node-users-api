@@ -1,8 +1,10 @@
-exports.httpToModel = (httpUser) => ({
-  name: httpUser.nome,
-  email: httpUser.email,
-  password: httpUser.senha,
-  phones: httpUser.telefones.map(({ numero, ddd }) => ({ number: numero, areaCode: ddd })),
+exports.httpToModel = ({
+  nome, email, senha, telefones = [],
+}) => ({
+  name: nome,
+  email,
+  password: senha,
+  phones: telefones.map(({ numero, ddd }) => ({ number: numero, areaCode: ddd })),
 });
 
 exports.modelToHttp = (modelUser) => ({
