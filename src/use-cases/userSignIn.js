@@ -6,7 +6,7 @@ const InvalidPasswordError = require('../errors/invalidPasswordError');
 const exec = async ({ email, password }) => {
   const user = await UserModel.findOne({ email });
   if (!user) {
-    throw new InexistentUserError();
+    throw new InexistentUserError('Usuário e/ou senha inválidos');
   }
   const isPasswordCorrect = await passwordService.checkPassword(password, user.password);
   if (isPasswordCorrect) {
@@ -14,7 +14,6 @@ const exec = async ({ email, password }) => {
     const savedUser = await user.save();
     return savedUser;
   }
-
   throw new InvalidPasswordError();
 };
 
