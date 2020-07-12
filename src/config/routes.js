@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const UserController = require('../controllers/userController');
 const UserValidator = require('../validators/userValidator');
+const SignInValidator = require('../validators/signInValidator');
 const validate = require('../validators/validate');
 const errorHandler = require('../errors/errorHandler');
 
@@ -14,6 +15,9 @@ apiRouter
 
 apiRouter.route('/users')
   .post(UserValidator, validate, UserController.signUp);
+
+apiRouter.route('/users/signin')
+  .post(SignInValidator, validate, UserController.signIn);
 
 router.use('/api', apiRouter);
 
