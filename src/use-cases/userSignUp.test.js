@@ -20,7 +20,7 @@ const expectedUserModel = {
 describe('User sign up tests', () => {
   it('should sign up new user successfully', async () => {
     jest.spyOn(UserModel.prototype, 'save')
-      .mockReturnValue(mockedUserModel);
+      .mockResolvedValue(mockedUserModel);
     const signedUpUser = await UserSignUp.exec(inputUserModel);
     expect(signedUpUser.toJSON()).toMatchObject(expectedUserModel);
   });

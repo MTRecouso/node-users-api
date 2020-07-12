@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
-const { FieldAlreadyExistsError } = require('../errors/errors');
+const FieldAlreadyExistsError = require('../errors/fieldAlreadyExistsError');
 
 const { hashPassword } = require('../services/passwordService');
 

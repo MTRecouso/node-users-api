@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const UserModel = require('./user.js');
-const { FieldAlreadyExistsError } = require('../errors/errors');
+const FieldAlreadyExistsError = require('../errors/fieldAlreadyExistsError');
 
 const userData = {
   name: 'Teste',
